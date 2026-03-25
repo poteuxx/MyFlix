@@ -2,152 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MyFlix • Free Movies</title>
+<title>MyFlix • 45+ Free Films</title>
+
 <style>
-body { margin:0; font-family:Arial, sans-serif; background:#141414; color:white; transition:0.3s; }
-header { padding:20px; font-size:32px; font-weight:bold; text-align:center; background:#000; color:#E50914; display:flex; justify-content:space-between; align-items:center; }
-button { cursor:pointer; background:#E50914; border:none; color:white; padding:5px 10px; border-radius:6px; transition:0.3s; }
-button:hover { background:#FF1A30; }
-.tabs { display:flex; justify-content:center; margin-top:10px; }
-.tab { padding:10px 20px; margin:0 5px; cursor:pointer; border-radius:6px; transition:0.3s; background:#222; }
-.tab.active { background:#E50914; color:white; }
-.section { display:none; padding:20px; }
-.section.active { display:block; animation:fadeIn 0.5s; }
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-.grid { display:flex; overflow-x:auto; gap:15px; padding:10px; }
-.card { min-width:160px; cursor:pointer; transition:0.3s; border-radius:10px; background:#222; padding:5px; }
+body { margin:0; background:#141414; color:white; font-family:Arial; }
+
+header {
+  display:flex; justify-content:space-between;
+  padding:20px; background:black;
+  color:#E50914; font-size:28px;
+}
+
+.tabs {
+  display:flex; justify-content:center;
+  background:#222; padding:10px;
+}
+
+.tab {
+  margin:0 6px; padding:8px 16px;
+  background:#333; border-radius:6px;
+  cursor:pointer; transition:0.3s;
+}
+.tab.active { background:#E50914; }
+
+.section { display:none; padding:15px; }
+.section.active { display:block; animation:fade 0.4s; }
+
+@keyframes fade { from{opacity:0} to{opacity:1} }
+
+.grid {
+  display:flex; overflow-x:auto;
+  gap:12px;
+}
+
+.card {
+  min-width:160px;
+  background:#222;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.card:hover { transform:scale(1.08); }
+
 .card img { width:100%; border-radius:10px; }
-.card:hover { transform:scale(1.05); }
-.player { width:100%; height:60vh; background:black; margin-top:10px; }
-.player iframe { width:100%; height:100%; border:none; border-radius:10px; }
+
+.player {
+  width:100%; height:60vh;
+  background:black;
+}
+.player iframe, .player video {
+  width:100%; height:100%; border:none;
+}
 </style>
 </head>
+
 <body>
 
-<header>
-  MyFlix
-  <button id="langBtn">FR</button>
-</header>
+<header>MyFlix 🎬</header>
 
 <div class="tabs">
-  <div class="tab active" data-section="action">Action</div>
-  <div class="tab" data-section="comedy">Comedy</div>
-  <div class="tab" data-section="horror">Horror</div>
-  <div class="tab" data-section="classics">Classics</div>
-  <div class="tab" data-section="family">Family</div>
-  <div class="tab" data-section="docs">Documentaries</div>
-  <div class="tab" data-section="settings">Settings</div>
+  <div class="tab active" data="classics">Classics</div>
+  <div class="tab" data="horror">Horror</div>
+  <div class="tab" data="scifi">Sci‑Fi</div>
+  <div class="tab" data="action">Action</div>
+  <div class="tab" data="comedy">Comedy</div>
+  <div class="tab" data="docs">Docs</div>
 </div>
 
 <div class="player">
-  <iframe id="videoPlayer"></iframe>
+  <iframe id="player"></iframe>
 </div>
 
-<!-- Sections -->
-<div id="action" class="section active"></div>
-<div id="comedy" class="section"></div>
-<div id="horror" class="section"></div>
-<div id="classics" class="section"></div>
-<div id="family" class="section"></div>
-<div id="docs" class="section"></div>
-<div id="settings" class="section">
-  <h2>Settings</h2>
-  <p>Language toggle and future options.</p>
-</div>
+<div id="classics" class="section active"><div class="grid"></div></div>
+<div id="horror" class="section"><div class="grid"></div></div>
+<div id="scifi" class="section"><div class="grid"></div></div>
+<div id="action" class="section"><div class="grid"></div></div>
+<div id="comedy" class="section"><div class="grid"></div></div>
+<div id="docs" class="section"><div class="grid"></div></div>
 
 <script>
-// Film lists (embedable public domain / legal films)
+
 const films = {
-  en: {
-    action:[
-      {id:"xQ1iG4Uc9ew", title:"Classic Action 1"},
-      {id:"98UgQ8Q0gXk", title:"Classic Action 2"},
-      {id:"pGQV5O_1QYs", title:"Space Adventure"}
-    ],
-    comedy:[
-      {id:"ko6Z2zLd7Tw", title:"Funny Classic"},
-      {id:"j9d5ldfz0rU", title:"Slapstick Comedy"}
-    ],
-    horror:[
-      {id:"qyYHWkVWQ4o", title:"Horror Night"},
-      {id:"UNk_Wu9K2fQ", title:"Classic Scare"}
-    ],
-    classics:[
-      {id:"Hh0X4Q9h1nE", title:"Night of the Living Dead"},
-      {id:"f5r4JY0z2lQ", title:"The General"}
-    ],
-    family:[
-      {id:"d4C7e7cY3gQ", title:"His Girl Friday"},
-      {id:"mYQv6rV4dM8", title:"Sherlock Holmes"}
-    ],
-    docs:[
-      {id:"PLw5hg4g6JdQ", title:"Documentary Compilation"}
-    ]
-  },
-  fr: {
-    action:[
-      {id:"xQ1iG4Uc9ew", title:"Action Classique 1"},
-      {id:"98UgQ8Q0gXk", title:"Action Classique 2"},
-      {id:"pGQV5O_1QYs", title:"Aventure Spatiale"}
-    ],
-    comedy:[
-      {id:"ko6Z2zLd7Tw", title:"Comédie Drôle"},
-      {id:"j9d5ldfz0rU", title:"Comédie Burlesque"}
-    ],
-    horror:[
-      {id:"qyYHWkVWQ4o", title:"Nuit d'Horreur"},
-      {id:"UNk_Wu9K2fQ", title:"Frayeur Classique"}
-    ],
-    classics:[
-      {id:"Hh0X4Q9h1nE", title:"La Nuit des morts-vivants"},
-      {id:"f5r4JY0z2lQ", title:"Le Général"}
-    ],
-    family:[
-      {id:"d4C7e7cY3gQ", title:"Sa Petite Amie"},
-      {id:"mYQv6rV4dM8", title:"Sherlock Holmes"}
-    ],
-    docs:[
-      {id:"PLw5hg4g6JdQ", title:"Compilation Documentaire"}
-    ]
-  }
+
+// 🎬 CLASSICS (10)
+classics: [
+{type:"yt",id:"Hh0X4Q9h1nE",title:"Night of the Living Dead"},
+{type:"yt",id:"f5r4JY0z2lQ",title:"The General"},
+{type:"web",id:"https://archive.org/download/Metropolis_1927/Metropolis_1927_512kb.mp4",title:"Metropolis"},
+{type:"web",id:"https://archive.org/download/TheLittleShopOfHorrors/TheLittleShopOfHorrors_512kb.mp4",title:"Little Shop of Horrors"},
+{type:"web",id:"https://archive.org/download/HisGirlFriday/HisGirlFriday_512kb.mp4",title:"His Girl Friday"},
+{type:"web",id:"https://archive.org/download/Detour/Detour_512kb.mp4",title:"Detour"},
+{type:"web",id:"https://archive.org/download/Dementia13/Dementia13_512kb.mp4",title:"Dementia 13"},
+{type:"web",id:"https://archive.org/download/TheLastManOnEarth/TheLastManOnEarth_512kb.mp4",title:"Last Man on Earth"},
+{type:"web",id:"https://archive.org/download/ScarletStreet1945/ScarletStreet1945_512kb.mp4",title:"Scarlet Street"},
+{type:"web",id:"https://archive.org/download/TheStranger/TheStranger_512kb.mp4",title:"The Stranger"}
+],
+
+// 👻 HORROR (8)
+horror: [
+{type:"yt",id:"Pv7fQb8bQv8",title:"Carnival of Souls"},
+{type:"yt",id:"9rDo1QxI260",title:"Plan 9 From Outer Space"},
+{type:"web",id:"https://archive.org/download/TheBrainThatWouldntDie/TheBrainThatWouldntDie_512kb.mp4",title:"Brain That Wouldn't Die"},
+{type:"web",id:"https://archive.org/download/Nosferatu1922/Nosferatu1922_512kb.mp4",title:"Nosferatu"},
+{type:"web",id:"https://archive.org/download/TheBat1959/TheBat1959_512kb.mp4",title:"The Bat"},
+{type:"web",id:"https://archive.org/download/TheScreamingSkull/TheScreamingSkull_512kb.mp4",title:"Screaming Skull"},
+{type:"web",id:"https://archive.org/download/HouseOnHauntedHill/HouseOnHauntedHill_512kb.mp4",title:"House on Haunted Hill"},
+{type:"web",id:"https://archive.org/download/NightOfTheLivingDead_201512/NightOfTheLivingDead_512kb.mp4",title:"Night of the Living Dead (Alt)"}
+],
+
+// 🚀 SCIFI (8)
+scifi: [
+{type:"yt",id:"b2veXzA80Lk",title:"The Lost World"},
+{type:"web",id:"https://archive.org/download/FlashGordon1936/FlashGordon1936_512kb.mp4",title:"Flash Gordon"},
+{type:"web",id:"https://archive.org/download/Plan9FromOuterSpace/Plan9FromOuterSpace_512kb.mp4",title:"Plan 9 (Alt)"},
+{type:"web",id:"https://archive.org/download/TeenagersFromOuterSpace/TeenagersFromOuterSpace_512kb.mp4",title:"Teenagers from Outer Space"},
+{type:"web",id:"https://archive.org/download/ThePhantomPlanet/ThePhantomPlanet_512kb.mp4",title:"Phantom Planet"},
+{type:"web",id:"https://archive.org/download/FirstSpaceshipOnVenus/FirstSpaceshipOnVenus_512kb.mp4",title:"Spaceship on Venus"},
+{type:"web",id:"https://archive.org/download/AssignmentOuterSpace/AssignmentOuterSpace_512kb.mp4",title:"Assignment Outer Space"},
+{type:"web",id:"https://archive.org/download/WarOfTheRobots/WarOfTheRobots_512kb.mp4",title:"War of the Robots"}
+],
+
+// 🔫 ACTION (7)
+action: [
+{type:"web",id:"https://archive.org/download/BlueSteel/BlueSteel_512kb.mp4",title:"Blue Steel"},
+{type:"web",id:"https://archive.org/download/TheFastAndTheFurious/TheFastAndTheFurious_512kb.mp4",title:"Fast and Furious (1954)"},
+{type:"web",id:"https://archive.org/download/TheOutlaw/TheOutlaw_512kb.mp4",title:"The Outlaw"},
+{type:"web",id:"https://archive.org/download/RideLonesome/RideLonesome_512kb.mp4",title:"Ride Lonesome"},
+{type:"web",id:"https://archive.org/download/AngelAndTheBadman/AngelAndTheBadman_512kb.mp4",title:"Angel and the Badman"},
+{type:"web",id:"https://archive.org/download/TheBigTrees/TheBigTrees_512kb.mp4",title:"The Big Trees"},
+{type:"web",id:"https://archive.org/download/Stagecoach1939/Stagecoach1939_512kb.mp4",title:"Stagecoach"}
+],
+
+// 😂 COMEDY (6)
+comedy: [
+{type:"yt",id:"ko6Z2zLd7Tw",title:"Comedy Classic"},
+{type:"web",id:"https://archive.org/download/TheGoldRush1925/TheGoldRush1925_512kb.mp4",title:"The Gold Rush"},
+{type:"web",id:"https://archive.org/download/SherlockJr/SherlockJr_512kb.mp4",title:"Sherlock Jr"},
+{type:"web",id:"https://archive.org/download/SteamboatBillJr/SteamboatBillJr_512kb.mp4",title:"Steamboat Bill Jr"},
+{type:"web",id:"https://archive.org/download/TheKid1921/TheKid1921_512kb.mp4",title:"The Kid"},
+{type:"web",id:"https://archive.org/download/SafetyLast1923/SafetyLast1923_512kb.mp4",title:"Safety Last"}
+],
+
+// 📚 DOCS (6)
+docs: [
+{type:"web",id:"https://archive.org/download/NASAExploration/NASAExploration_512kb.mp4",title:"NASA Documentary"},
+{type:"web",id:"https://archive.org/download/WW2Documentary/WW2Documentary_512kb.mp4",title:"WW2 Documentary"},
+{type:"web",id:"https://archive.org/download/SpaceExploration/SpaceExploration_512kb.mp4",title:"Space Exploration"},
+{type:"web",id:"https://archive.org/download/OceanLifeDoc/OceanLifeDoc_512kb.mp4",title:"Ocean Life"},
+{type:"web",id:"https://archive.org/download/HistoryOfFlight/HistoryOfFlight_512kb.mp4",title:"History of Flight"},
+{type:"web",id:"https://archive.org/download/WildlifeDoc/WildlifeDoc_512kb.mp4",title:"Wildlife Documentary"}
+]
+
 };
 
-let currentLang="en";
+// 🎬 LOAD FILMS
+for (let cat in films) {
+  let grid = document.querySelector("#"+cat+" .grid");
 
-// Initialize sections
-function renderFilms() {
-  for(const section in films[currentLang]){
-    const container=document.getElementById(section);
-    container.innerHTML="";
-    films[currentLang][section].forEach(f=>{
-      const div=document.createElement("div");
-      div.className="card";
-      div.innerHTML=`<img src="https://img.youtube.com/vi/${f.id}/0.jpg"><p>${f.title}</p>`;
-      div.onclick=()=>{document.getElementById("videoPlayer").src=`https://www.youtube.com/embed/${f.id}?autoplay=1`;}
-      container.appendChild(div);
-    });
-  }
+  films[cat].forEach(f => {
+    let card = document.createElement("div");
+    card.className = "card";
+
+    let thumb = f.type=="yt"
+      ? `https://img.youtube.com/vi/${f.id}/0.jpg`
+      : "https://upload.wikimedia.org/wikipedia/commons/4/45/Film_icon.svg";
+
+    card.innerHTML = `<img src="${thumb}"><p>${f.title}</p>`;
+
+    card.onclick = () => {
+      if (f.type=="yt") {
+        document.getElementById("player").outerHTML =
+          `<iframe id="player" src="https://www.youtube.com/embed/${f.id}?autoplay=1"></iframe>`;
+      } else {
+        document.getElementById("player").outerHTML =
+          `<video id="player" controls autoplay src="${f.id}"></video>`;
+      }
+    };
+
+    grid.appendChild(card);
+  });
 }
 
-renderFilms();
-
-// Tabs
+// 🧭 TABS
 document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
+  tab.onclick=()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
     tab.classList.add("active");
-    const sectionId=tab.dataset.section;
-    document.querySelectorAll(".section").forEach(sec=>sec.classList.remove("active"));
-    document.getElementById(sectionId).classList.add("active");
-  });
+
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    document.getElementById(tab.getAttribute("data")).classList.add("active");
+  };
 });
 
-// Language toggle
-document.getElementById("langBtn").addEventListener("click", ()=>{
-  currentLang=currentLang==="en"?"fr":"en";
-  document.getElementById("langBtn").textContent=currentLang==="en"?"FR":"EN";
-  renderFilms();
-});
 </script>
+
 </body>
 </html>
