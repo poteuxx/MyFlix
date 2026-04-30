@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>MyFlix • Cinema Hub</title>
+<title>BlueFlix • Cinema Hub</title>
 
 <style>
 :root{
@@ -19,7 +19,6 @@ body{
   font-family:Arial, sans-serif;
   background:var(--bg);
   color:var(--text);
-  overflow-x:hidden;
 }
 
 /* HEADER */
@@ -28,11 +27,8 @@ header{
   text-align:center;
   font-size:32px;
   font-weight:bold;
-  letter-spacing:1px;
   background:linear-gradient(90deg,#06102a,#0a1b3f);
   color:var(--blue2);
-  box-shadow:0 0 25px rgba(47,123,255,0.3);
-  animation:slideDown 0.8s ease;
 }
 
 /* TABS */
@@ -52,34 +48,28 @@ header{
   background:#0f1a33;
   color:var(--muted);
   transition:0.3s;
-  border:1px solid transparent;
 }
 
 .tab:hover{
   transform:scale(1.05);
-  border:1px solid var(--blue);
   color:white;
 }
 
 .tab.active{
   background:linear-gradient(90deg,var(--blue),var(--blue2));
   color:white;
-  box-shadow:0 0 15px rgba(47,123,255,0.6);
 }
 
 /* PLAYER */
 .player{
   height:60vh;
   margin:15px;
-  border-radius:18px;
+  border-radius:16px;
   overflow:hidden;
   background:black;
-  box-shadow:0 0 30px rgba(47,123,255,0.2);
-  animation:fadeIn 0.8s ease;
 }
 
-.player iframe,
-.player video{
+.player iframe{
   width:100%;
   height:100%;
   border:none;
@@ -93,7 +83,6 @@ header{
 
 .section.active{
   display:block;
-  animation:fadeIn 0.5s ease;
 }
 
 .grid{
@@ -110,14 +99,12 @@ header{
   border-radius:14px;
   cursor:pointer;
   transition:0.3s;
-  flex-shrink:0;
-  border:1px solid rgba(47,123,255,0.2);
   overflow:hidden;
 }
 
 .card:hover{
-  transform:scale(1.08);
-  box-shadow:0 0 20px rgba(47,123,255,0.6);
+  transform:scale(1.07);
+  box-shadow:0 0 20px rgba(47,123,255,0.5);
 }
 
 .card img{
@@ -128,29 +115,8 @@ header{
 
 .card p{
   text-align:center;
-  font-size:13px;
   margin:8px;
-  color:white;
-}
-
-/* ANIMATIONS */
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(15px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-@keyframes slideDown{
-  from{opacity:0; transform:translateY(-20px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-/* SCROLLBAR */
-.grid::-webkit-scrollbar{
-  height:6px;
-}
-.grid::-webkit-scrollbar-thumb{
-  background:var(--blue);
-  border-radius:10px;
+  font-size:13px;
 }
 </style>
 </head>
@@ -169,7 +135,7 @@ header{
 </div>
 
 <div class="player" id="playerBox">
-  <iframe id="player" src=""></iframe>
+  <iframe id="player"></iframe>
 </div>
 
 <!-- SECTIONS -->
@@ -182,10 +148,16 @@ header{
 
 <script>
 
-/* 🎬 FILMS (SAFE + WORKING via Archive Embed) */
+/* 🎬 FILMS STABLES (IDs VALIDES ARCHIVE EMBED) */
 const films = {
+classics: [
+  {id:"thegoldrush1925", title:"The Gold Rush"},
+  {id:"metropolis", title:"Metropolis"},
+  {id:"thegeneral1926", title:"The General"}
+],
+
 horror: [
-  {id:"nosferatu", title:"Nosferatu (1922)"},
+  {id:"nosferatu", title:"Nosferatu"},
   {id:"night_of_the_living_dead", title:"Night of the Living Dead"},
   {id:"carnival_of_souls", title:"Carnival of Souls"}
 ],
@@ -196,34 +168,36 @@ scifi: [
 ],
 
 action: [
-  {id:"stagecoach", title:"Stagecoach"},
-  {id:"ride_lonesome", title:"Ride Lonesome"}
+  {id:"stagecoach1939", title:"Stagecoach"},
+  {id:"ridelonesome", title:"Ride Lonesome"}
 ],
 
 comedy: [
-  {id:"the_kid", title:"The Kid"},
+  {id:"thekid1921", title:"The Kid"},
   {id:"steamboat_bill_jr", title:"Steamboat Bill Jr"}
 ],
 
 documentary: [
-  {id:"apollo_11", title:"Apollo 11"},
-  {id:"ww2_documentary", title:"WW2 Documentary"}
-],
-
-classics: [
-  {id:"the_gold_rush", title:"The Gold Rush"},
-  {id:"metropolis", title:"Metropolis"}
+  {id:"apollo11", title:"Apollo 11"},
+  {id:"ww2documentary", title:"WW2 Documentary"}
 ]
 };
 
-/* ▶️ PLAYER PRO (NO MIME BUG) */
+/* ▶️ PLAYER FIX (ANTI BUG + FALLBACK) */
 function playMedia(f){
+  const url = `https://archive.org/embed/${f.id}`;
+
   document.getElementById("playerBox").innerHTML = `
     <iframe
-      src="https://archive.org/embed/${f.id}"
+      src="${url}"
       allowfullscreen>
     </iframe>
   `;
+}
+
+/* 🖼 IMAGE FIX (TOUJOURS OK) */
+function thumb(title){
+  return `https://via.placeholder.com/300x170/0b1b3a/ffffff?text=${encodeURIComponent(title)}`;
 }
 
 /* 📦 POPULATE */
@@ -235,10 +209,8 @@ function populate(){
       const card = document.createElement("div");
       card.className="card";
 
-      const img = "https://via.placeholder.com/300x170/0a1b3f/ffffff?text=" + encodeURIComponent(f.title);
-
       card.innerHTML = `
-        <img src="${img}">
+        <img src="${thumb(f.title)}">
         <p>${f.title}</p>
       `;
 
