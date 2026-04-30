@@ -3,25 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <title>MyFlix • Films Longs</title>
+
 <style>
 body { margin:0; font-family:Arial,sans-serif; background:#141414; color:white; }
-header { background:#000; padding:20px; font-size:30px; text-align:center; color:#E50914; letter-spacing:1px; }
-.tabs { display:flex; justify-content:center; background:#222; padding:10px; gap:6px; flex-wrap:wrap;}
-.tab { padding:10px 18px; border-radius:8px; cursor:pointer; background:#333; transition:0.3s; font-weight:bold; }
-.tab.active { background:#E50914; color:white; }
-.section { display:none; padding:15px; }
-.section.active { display:block; animation:fadeIn 0.5s ease; }
-@keyframes fadeIn { from {opacity:0; transform:translateY(15px);} to {opacity:1; transform:translateY(0);} }
-.grid { display:flex; gap:12px; overflow-x:auto; padding:8px; scroll-behavior:smooth; }
-.card { min-width:180px; background:#222; border-radius:12px; cursor:pointer; text-align:center; transition:0.3s; flex-shrink:0; }
-.card:hover { transform:scale(1.08); box-shadow:0 0 15px #E50914; }
-.card img { width:100%; border-radius:12px; }
-.card p { margin:6px 0; font-size:14px; font-weight:bold; }
 
-.player { width:100%; height:65vh; background:black; margin-top:12px; border-radius:12px; overflow:hidden; }
-.player iframe, .player video { width:100%; height:100%; border:none; border-radius:12px; }
+header {
+  background:#000;
+  padding:20px;
+  font-size:30px;
+  text-align:center;
+  color:#E50914;
+  letter-spacing:1px;
+}
+
+.tabs {
+  display:flex;
+  justify-content:center;
+  background:#222;
+  padding:10px;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.tab {
+  padding:10px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  background:#333;
+  transition:0.3s;
+  font-weight:bold;
+}
+
+.tab.active {
+  background:#E50914;
+  color:white;
+}
+
+.section {
+  display:none;
+  padding:15px;
+}
+
+.section.active {
+  display:block;
+  animation:fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(15px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+.grid {
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding:8px;
+}
+
+.card {
+  min-width:180px;
+  background:#222;
+  border-radius:12px;
+  cursor:pointer;
+  text-align:center;
+  transition:0.3s;
+  flex-shrink:0;
+}
+
+.card:hover {
+  transform:scale(1.08);
+  box-shadow:0 0 15px #E50914;
+}
+
+.card img {
+  width:100%;
+  border-radius:12px;
+}
+
+.card p {
+  margin:6px 0;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.player {
+  width:100%;
+  height:65vh;
+  background:black;
+  margin-top:12px;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.player iframe,
+.player video {
+  width:100%;
+  height:100%;
+  border:none;
+}
 </style>
 </head>
+
 <body>
 
 <header>MyFlix 🎬 Longs Métrages</header>
@@ -29,14 +112,14 @@ header { background:#000; padding:20px; font-size:30px; text-align:center; color
 <div class="tabs">
   <div class="tab active" data="classics">Classiques</div>
   <div class="tab" data="horror">Horreur</div>
-  <div class="tab" data="scifi">Sci‑Fi</div>
+  <div class="tab" data="scifi">Sci-Fi</div>
   <div class="tab" data="action">Action</div>
   <div class="tab" data="comedy">Comédie</div>
   <div class="tab" data="documentary">Documentaires</div>
 </div>
 
-<div class="player">
-  <iframe id="player"></iframe>
+<div class="player" id="playerBox">
+  <video id="player" controls autoplay></video>
 </div>
 
 <div id="classics" class="section active"><div class="grid"></div></div>
@@ -47,77 +130,74 @@ header { background:#000; padding:20px; font-size:30px; text-align:center; color
 <div id="documentary" class="section"><div class="grid"></div></div>
 
 <script>
-// Films longs (>1h), fiables et jouables
+
+// 🎬 FILMS
 const films = {
 classics: [
-  {type:"web", id:"https://archive.org/download/TheGoldRush1925/TheGoldRush1925_512kb.mp4", title:"The Gold Rush (1925) 1h35"},
-  {type:"web", id:"https://archive.org/download/Metropolis_1927/Metropolis_1927_512kb.mp4", title:"Metropolis (1927) 1h45"},
-  {type:"web", id:"https://archive.org/download/TheGeneral1926/TheGeneral1926_512kb.mp4", title:"The General (1926) 1h36"},
-  {type:"web", id:"https://archive.org/download/HisGirlFriday/HisGirlFriday_512kb.mp4", title:"His Girl Friday (1940) 1h42"},
-  {type:"web", id:"https://archive.org/download/Detour/Detour_512kb.mp4", title:"Detour (1945) 1h20"},
-  {type:"web", id:"https://archive.org/download/The39Steps/The39Steps_512kb.mp4", title:"The 39 Steps (1935) 1h26"},
-  {type:"web", id:"https://archive.org/download/Rebecca1940/Rebecca1940_512kb.mp4", title:"Rebecca (1940) 2h10"},
-  {type:"web", id:"https://archive.org/download/TheLadyVanishes/TheLadyVanishes_512kb.mp4", title:"The Lady Vanishes (1938) 1h36"}
+  {type:"video", id:"https://archive.org/download/TheGoldRush1925/TheGoldRush1925_512kb.mp4", title:"The Gold Rush (1925)"},
+  {type:"video", id:"https://archive.org/download/Metropolis_1927/Metropolis_1927_512kb.mp4", title:"Metropolis (1927)"},
+  {type:"video", id:"https://archive.org/download/TheGeneral1926/TheGeneral1926_512kb.mp4", title:"The General (1926)"},
+  {type:"video", id:"https://archive.org/download/Detour/Detour_512kb.mp4", title:"Detour (1945)"}
 ],
 
 horror: [
-  {type:"web", id:"https://archive.org/download/NightOfTheLivingDead_201512/NightOfTheLivingDead_512kb.mp4", title:"Night of the Living Dead (1968) 1h36"},
-  {type:"web", id:"https://archive.org/download/CarnivalOfSouls_1962/CarnivalOfSouls_512kb.mp4", title:"Carnival of Souls (1962) 1h20"},
-  {type:"web", id:"https://archive.org/download/HouseOnHauntedHill/HouseOnHauntedHill_512kb.mp4", title:"House on Haunted Hill (1959) 1h26"},
-  {type:"web", id:"https://archive.org/download/TheBat1959/TheBat1959_512kb.mp4", title:"The Bat (1959) 1h20"},
-  {type:"web", id:"https://archive.org/download/Nosferatu1922/Nosferatu1922_512kb.mp4", title:"Nosferatu (1922) 1h34"},
-  {type:"web", id:"https://archive.org/download/WhiteZombie/WhiteZombie_512kb.mp4", title:"White Zombie (1932) 1h09"},
-  {type:"web", id:"https://archive.org/download/TheLastManOnEarth1964/TheLastManOnEarth1964_512kb.mp4", title:"Last Man on Earth (1964) 1h26"}
+  {type:"video", id:"https://archive.org/download/NightOfTheLivingDead_201512/NightOfTheLivingDead_512kb.mp4", title:"Night of the Living Dead"},
+  {type:"video", id:"https://archive.org/download/Nosferatu1922/Nosferatu1922_512kb.mp4", title:"Nosferatu"},
+  {type:"video", id:"https://archive.org/download/CarnivalOfSouls_1962/CarnivalOfSouls_512kb.mp4", title:"Carnival of Souls"}
 ],
 
 scifi: [
-  {type:"web", id:"https://archive.org/download/FirstSpaceshipOnVenus/FirstSpaceshipOnVenus_512kb.mp4", title:"First Spaceship on Venus (1960) 1h30"},
-  {type:"web", id:"https://archive.org/download/TeenagersFromOuterSpace/TeenagersFromOuterSpace_512kb.mp4", title:"Teenagers from Outer Space (1959) 1h24"},
-  {type:"web", id:"https://archive.org/download/ThePhantomPlanet/ThePhantomPlanet_512kb.mp4", title:"Phantom Planet (1961) 1h30"},
-  {type:"web", id:"https://archive.org/download/WarOfTheRobots/WarOfTheRobots_512kb.mp4", title:"War of the Robots (1978) 1h38"},
-  {type:"web", id:"https://archive.org/download/AssignmentOuterSpace/AssignmentOuterSpace_512kb.mp4", title:"Assignment: Outer Space (1960) 1h35"},
-  {type:"web", id:"https://archive.org/download/Plan9FromOuterSpace/Plan9FromOuterSpace_512kb.mp4", title:"Plan 9 from Outer Space (1959) 1h19"}
+  {type:"video", id:"https://archive.org/download/Plan9FromOuterSpace/Plan9FromOuterSpace_512kb.mp4", title:"Plan 9 From Outer Space"},
+  {type:"video", id:"https://archive.org/download/FirstSpaceshipOnVenus/FirstSpaceshipOnVenus_512kb.mp4", title:"First Spaceship on Venus"}
 ],
 
 action: [
-  {type:"web", id:"https://archive.org/download/Stagecoach1939/Stagecoach1939_512kb.mp4", title:"Stagecoach (1939) 1h56"},
-  {type:"web", id:"https://archive.org/download/BlueSteel/BlueSteel_512kb.mp4", title:"Blue Steel (1934) 1h25"},
-  {type:"web", id:"https://archive.org/download/RideLonesome/RideLonesome_512kb.mp4", title:"Ride Lonesome (1959) 1h33"},
-  {type:"web", id:"https://archive.org/download/AngelAndTheBadman/AngelAndTheBadman_512kb.mp4", title:"Angel and the Badman (1947) 1h28"},
-  {type:"web", id:"https://archive.org/download/TheBigTrees/TheBigTrees_512kb.mp4", title:"The Big Trees (1952) 1h35"},
-  {type:"web", id:"https://archive.org/download/TheOutlaw/TheOutlaw_512kb.mp4", title:"The Outlaw (1943) 1h56"}
+  {type:"video", id:"https://archive.org/download/Stagecoach1939/Stagecoach1939_512kb.mp4", title:"Stagecoach"},
+  {type:"video", id:"https://archive.org/download/RideLonesome/RideLonesome_512kb.mp4", title:"Ride Lonesome"}
 ],
 
 comedy: [
-  {type:"web", id:"https://archive.org/download/MonkeyBusiness1926/MonkeyBusiness1926_512kb.mp4", title:"Monkey Business (1926) 1h30"},
-  {type:"web", id:"https://archive.org/download/TheFreshman1925/TheFreshman1925_512kb.mp4", title:"The Freshman (1925) 1h32"},
-  {type:"web", id:"https://archive.org/download/SafetyLast1923/SafetyLast1923_512kb.mp4", title:"Safety Last! (1923) 1h25"},
-  {type:"web", id:"https://archive.org/download/SteamboatBillJr/SteamboatBillJr_512kb.mp4", title:"Steamboat Bill Jr. (1928) 1h28"},
-  {type:"web", id:"https://archive.org/download/TheKid1921/TheKid1921_512kb.mp4", title:"The Kid (1921) 1h34"},
-  {type:"web", id:"https://archive.org/download/TheGoldRush1925/TheGoldRush1925_512kb.mp4", title:"Chaplin Comedy (1h35)"}
+  {type:"video", id:"https://archive.org/download/TheKid1921/TheKid1921_512kb.mp4", title:"The Kid"},
+  {type:"video", id:"https://archive.org/download/SteamboatBillJr/SteamboatBillJr_512kb.mp4", title:"Steamboat Bill Jr"}
 ],
 
 documentary: [
-  {type:"web", id:"https://archive.org/download/OceanLifeDoc/OceanLifeDoc_512kb.mp4", title:"Ocean Life (1h10)"},
-  {type:"web", id:"https://archive.org/download/HistoryOfFlight/HistoryOfFlight_512kb.mp4", title:"History of Flight (1h15)"},
-  {type:"web", id:"https://archive.org/download/WW2Documentary/WW2Documentary_512kb.mp4", title:"WW2 Documentary (1h20)"},
-  {type:"web", id:"https://archive.org/download/SpaceExploration/SpaceExploration_512kb.mp4", title:"Space Exploration (1h10)"},
-  {type:"web", id:"https://archive.org/download/NASAExploration/NASAExploration_512kb.mp4", title:"NASA Documentary (1h12)"},
-  {type:"web", id:"https://archive.org/download/Apollo11/Apollo11_512kb.mp4", title:"Apollo 11 (1h30)"}
+  {type:"video", id:"https://archive.org/download/Apollo11/Apollo11_512kb.mp4", title:"Apollo 11"},
+  {type:"video", id:"https://archive.org/download/WW2Documentary/WW2Documentary_512kb.mp4", title:"WW2 Documentary"}
 ]
 };
+
+// 🎯 PLAYER LOGIC (FIX PRINCIPAL)
+function playMedia(f){
+  const box = document.getElementById("playerBox");
+
+  if(f.type === "video"){
+    box.innerHTML = `<video id="player" controls autoplay src="${f.id}"></video>`;
+  }
+  else if(f.type === "embed"){
+    box.innerHTML = `<iframe src="${f.id}" allowfullscreen></iframe>`;
+  }
+  else if(f.type === "link"){
+    window.open(f.id, "_blank");
+  }
+}
+
+// 📦 POPULATE
 function populate(){
   for(let cat in films){
     const grid = document.getElementById(cat).querySelector(".grid");
+
     films[cat].forEach(f=>{
       const card = document.createElement("div");
       card.className="card";
-      const thumb = "https://upload.wikimedia.org/wikipedia/commons/4/45/Film_icon.svg";
-      card.innerHTML = `<img src="${thumb}"><p>${f.title}</p>`;
-      card.onclick = ()=>{
-        document.getElementById("player").outerHTML = 
-          `<video id="player" controls autoplay src="${f.id}"></video>`;
-      };
+
+      card.innerHTML = `
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Film_icon.svg">
+        <p>${f.title}</p>
+      `;
+
+      card.onclick = ()=> playMedia(f);
+
       grid.appendChild(card);
     });
   }
@@ -125,15 +205,18 @@ function populate(){
 
 populate();
 
-// Onglets
+// 🧭 TABS
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
+
     document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
     document.getElementById(t.getAttribute("data")).classList.add("active");
   };
 });
+
 </script>
+
 </body>
 </html>
