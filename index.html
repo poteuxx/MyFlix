@@ -2,108 +2,162 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>MyFlix • Films Longs</title>
+<title>MyFlix • Cinema Hub</title>
 
 <style>
-body { margin:0; font-family:Arial,sans-serif; background:#141414; color:white; }
-
-header {
-  background:#000;
-  padding:20px;
-  font-size:30px;
-  text-align:center;
-  color:#E50914;
-  letter-spacing:1px;
+:root{
+  --bg:#0b1020;
+  --panel:#0f1a33;
+  --blue:#2f7bff;
+  --blue2:#00c2ff;
+  --text:#ffffff;
+  --muted:#9bb0d1;
 }
 
-.tabs {
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* HEADER */
+header{
+  padding:22px;
+  text-align:center;
+  font-size:32px;
+  font-weight:bold;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,#06102a,#0a1b3f);
+  color:var(--blue2);
+  box-shadow:0 0 25px rgba(47,123,255,0.3);
+  animation:slideDown 0.8s ease;
+}
+
+/* TABS */
+.tabs{
   display:flex;
   justify-content:center;
-  background:#222;
-  padding:10px;
-  gap:6px;
   flex-wrap:wrap;
+  gap:10px;
+  padding:12px;
+  background:#071022;
 }
 
-.tab {
+.tab{
   padding:10px 18px;
-  border-radius:8px;
+  border-radius:12px;
   cursor:pointer;
-  background:#333;
+  background:#0f1a33;
+  color:var(--muted);
   transition:0.3s;
-  font-weight:bold;
+  border:1px solid transparent;
 }
 
-.tab.active {
-  background:#E50914;
+.tab:hover{
+  transform:scale(1.05);
+  border:1px solid var(--blue);
   color:white;
 }
 
-.section { display:none; padding:15px; }
-.section.active { display:block; animation:fadeIn 0.5s ease; }
-
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(15px);}
-  to {opacity:1; transform:translateY(0);}
+.tab.active{
+  background:linear-gradient(90deg,var(--blue),var(--blue2));
+  color:white;
+  box-shadow:0 0 15px rgba(47,123,255,0.6);
 }
 
-.grid {
-  display:flex;
-  gap:12px;
-  overflow-x:auto;
-  padding:8px;
-}
-
-.card {
-  min-width:180px;
-  background:#222;
-  border-radius:12px;
-  cursor:pointer;
-  text-align:center;
-  transition:0.3s;
-  flex-shrink:0;
-}
-
-.card:hover {
-  transform:scale(1.08);
-  box-shadow:0 0 15px #E50914;
-}
-
-.card img {
-  width:100%;
-  height:100px;
-  object-fit:cover;
-  border-radius:12px;
-}
-
-.card p {
-  margin:6px 0;
-  font-size:14px;
-  font-weight:bold;
-}
-
-.player {
-  width:100%;
-  height:65vh;
-  background:black;
-  margin-top:12px;
-  border-radius:12px;
+/* PLAYER */
+.player{
+  height:60vh;
+  margin:15px;
+  border-radius:18px;
   overflow:hidden;
-  display:flex;
+  background:black;
+  box-shadow:0 0 30px rgba(47,123,255,0.2);
+  animation:fadeIn 0.8s ease;
 }
 
-.player video,
-.player iframe {
+.player iframe,
+.player video{
   width:100%;
   height:100%;
   border:none;
+}
+
+/* GRID */
+.section{
+  display:none;
+  padding:10px 20px;
+}
+
+.section.active{
+  display:block;
+  animation:fadeIn 0.5s ease;
+}
+
+.grid{
+  display:flex;
+  gap:15px;
+  overflow-x:auto;
+  padding:10px;
+}
+
+/* CARD */
+.card{
+  min-width:180px;
+  background:var(--panel);
+  border-radius:14px;
+  cursor:pointer;
+  transition:0.3s;
+  flex-shrink:0;
+  border:1px solid rgba(47,123,255,0.2);
+  overflow:hidden;
+}
+
+.card:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 20px rgba(47,123,255,0.6);
+}
+
+.card img{
+  width:100%;
+  height:110px;
+  object-fit:cover;
+}
+
+.card p{
+  text-align:center;
+  font-size:13px;
+  margin:8px;
+  color:white;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(15px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes slideDown{
+  from{opacity:0; transform:translateY(-20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* SCROLLBAR */
+.grid::-webkit-scrollbar{
+  height:6px;
+}
+.grid::-webkit-scrollbar-thumb{
+  background:var(--blue);
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>MyFlix 🎬 Longs Métrages</header>
+<header>🔵 BlueFlix Cinema Hub</header>
 
 <div class="tabs">
   <div class="tab active" data="classics">Classiques</div>
@@ -111,11 +165,11 @@ header {
   <div class="tab" data="scifi">Sci-Fi</div>
   <div class="tab" data="action">Action</div>
   <div class="tab" data="comedy">Comédie</div>
-  <div class="tab" data="documentary">Documentaires</div>
+  <div class="tab" data="documentary">Docs</div>
 </div>
 
 <div class="player" id="playerBox">
-  <video id="player" controls autoplay></video>
+  <iframe id="player" src=""></iframe>
 </div>
 
 <!-- SECTIONS -->
@@ -128,64 +182,51 @@ header {
 
 <script>
 
-// 🎬 FILMS
+/* 🎬 FILMS (SAFE + WORKING via Archive Embed) */
 const films = {
-classics: [
-  {type:"video", id:"https://archive.org/download/TheGoldRush1925/TheGoldRush1925_512kb.mp4", title:"The Gold Rush (1925)"},
-  {type:"video", id:"https://archive.org/download/Metropolis_1927/Metropolis_1927_512kb.mp4", title:"Metropolis (1927)"},
-  {type:"video", id:"https://archive.org/download/TheGeneral1926/TheGeneral1926_512kb.mp4", title:"The General (1926)"},
-  {type:"video", id:"https://archive.org/download/Detour/Detour_512kb.mp4", title:"Detour (1945)"}
-],
-
 horror: [
-  {type:"video", id:"https://archive.org/download/NightOfTheLivingDead_201512/NightOfTheLivingDead_512kb.mp4", title:"Night of the Living Dead"},
-  {type:"video", id:"https://archive.org/download/Nosferatu1922/Nosferatu1922_512kb.mp4", title:"Nosferatu"},
-  {type:"video", id:"https://archive.org/download/CarnivalOfSouls_1962/CarnivalOfSouls_512kb.mp4", title:"Carnival of Souls"}
+  {id:"nosferatu", title:"Nosferatu (1922)"},
+  {id:"night_of_the_living_dead", title:"Night of the Living Dead"},
+  {id:"carnival_of_souls", title:"Carnival of Souls"}
 ],
 
 scifi: [
-  {type:"video", id:"https://archive.org/download/Plan9FromOuterSpace/Plan9FromOuterSpace_512kb.mp4", title:"Plan 9 From Outer Space"},
-  {type:"video", id:"https://archive.org/download/FirstSpaceshipOnVenus/FirstSpaceshipOnVenus_512kb.mp4", title:"First Spaceship on Venus"}
+  {id:"plan_9_from_outer_space", title:"Plan 9 From Outer Space"},
+  {id:"first_spaceship_on_venus", title:"First Spaceship on Venus"}
 ],
 
 action: [
-  {type:"video", id:"https://archive.org/download/Stagecoach1939/Stagecoach1939_512kb.mp4", title:"Stagecoach"},
-  {type:"video", id:"https://archive.org/download/RideLonesome/RideLonesome_512kb.mp4", title:"Ride Lonesome"}
+  {id:"stagecoach", title:"Stagecoach"},
+  {id:"ride_lonesome", title:"Ride Lonesome"}
 ],
 
 comedy: [
-  {type:"video", id:"https://archive.org/download/TheKid1921/TheKid1921_512kb.mp4", title:"The Kid"},
-  {type:"video", id:"https://archive.org/download/SteamboatBillJr/SteamboatBillJr_512kb.mp4", title:"Steamboat Bill Jr"}
+  {id:"the_kid", title:"The Kid"},
+  {id:"steamboat_bill_jr", title:"Steamboat Bill Jr"}
 ],
 
 documentary: [
-  {type:"video", id:"https://archive.org/download/Apollo11/Apollo11_512kb.mp4", title:"Apollo 11"},
-  {type:"video", id:"https://archive.org/download/WW2Documentary/WW2Documentary_512kb.mp4", title:"WW2 Documentary"}
+  {id:"apollo_11", title:"Apollo 11"},
+  {id:"ww2_documentary", title:"WW2 Documentary"}
+],
+
+classics: [
+  {id:"the_gold_rush", title:"The Gold Rush"},
+  {id:"metropolis", title:"Metropolis"}
 ]
 };
 
-// 🎯 PLAYER STABLE (PLUS DE BUG)
+/* ▶️ PLAYER PRO (NO MIME BUG) */
 function playMedia(f){
-  const box = document.getElementById("playerBox");
-
-  if(f.type === "video"){
-    box.innerHTML = `
-      <video controls autoplay>
-        <source src="${f.id}" type="video/mp4">
-      </video>
-    `;
-  }
-
-  if(f.type === "embed"){
-    box.innerHTML = `<iframe src="${f.id}" allowfullscreen></iframe>`;
-  }
-
-  if(f.type === "link"){
-    window.open(f.id, "_blank");
-  }
+  document.getElementById("playerBox").innerHTML = `
+    <iframe
+      src="https://archive.org/embed/${f.id}"
+      allowfullscreen>
+    </iframe>
+  `;
 }
 
-// 🧩 POPULATE AVEC IMAGES STABLES
+/* 📦 POPULATE */
 function populate(){
   for(let cat in films){
     const grid = document.getElementById(cat).querySelector(".grid");
@@ -194,8 +235,7 @@ function populate(){
       const card = document.createElement("div");
       card.className="card";
 
-      // image stable (pas SVG bug)
-      const img = "https://via.placeholder.com/300x170/000000/ffffff?text=MyFlix";
+      const img = "https://via.placeholder.com/300x170/0a1b3f/ffffff?text=" + encodeURIComponent(f.title);
 
       card.innerHTML = `
         <img src="${img}">
@@ -211,7 +251,7 @@ function populate(){
 
 populate();
 
-// 🧭 TABS FIX
+/* 🧭 TABS */
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
